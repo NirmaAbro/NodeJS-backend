@@ -1,15 +1,36 @@
 const express = require("express");
 const app = express();
-const mongoose = require("mongoose");
+const path = require("path");
 const urlRoutes = require("./routes/url");
+const staticRouter = require("./routes/staticRouter");
 const connectDB = require("./connect");
 const url = require("./models/url");
 require("dotenv").config();
 
 const PORT = process.env.PORT || 5000;
 
+app.set("view engine", "ejs");
+app.set("views", path.resolve("./views"));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); //for form data
 app.use("/url", urlRoutes);
+app.use("/",staticRouter);
+
+app.get("/allurls", async (req, res) => {
+  const allUrls = await url.find({});
+  try {
+    return res.render("home",{
+      urls:allUrls
+    });
+  } catch (error) {
+    console.error(err);
+    res.status(500).send("Error loading dashboard");
+  }
+ 
+})
+
+
+
 
 // Redirect
 app.get("/:shortid", async (req, res) => {

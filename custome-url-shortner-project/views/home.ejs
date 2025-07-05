@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>URL Shortener</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2d6cdf;
+      margin-bottom: 20px;
+    }
+
+    .generated {
+      text-align: center;
+      background-color: #e0f3ff;
+      padding: 15px;
+      border: 1px solid #b6e0ff;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      color: #0070c9;
+    }
+
+    .formm {
+      background-color: #fff;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+      margin-bottom: 40px;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    #inputt {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      font-size: 1rem;
+    }
+
+    #submit {
+      background-color: #2d6cdf;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #submit:hover {
+      background-color: #1a54b7;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    th, td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #eee;
+      text-align: center;
+    }
+
+    th {
+      background-color: #2d6cdf;
+      color: white;
+    }
+
+    a {
+      color: #2d6cdf;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>🔗 URL Shortener</h1>
+
+    <% if (id) { %>
+      <div class="generated">
+        URL Generated 👉 <a href="http://localhost:5000/<%= id %>" target="_blank">http://localhost:5000/<%= id %></a>
+      </div>
+    <% } %>
+
+    <form method="post" action="/url" class="formm">
+      <label for="inputt">Enter your URL:</label>
+      <input type="text" name="url" id="inputt" placeholder="https://example.com" required />
+      <button type="submit" id="submit">Generate Short URL</button>
+    </form>
+
+    <% if (urls && urls.length > 0) { %>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Short ID</th>
+            <th>Redirect URL</th>
+            <th>Analytics</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% urls.forEach((url, index) => { %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><a href="/<%= url.shortId %>" target="_blank"><%= url.shortId %></a></td>
+              <td><a href="<%= url.redirectUrl %>" target="_blank"><%= url.redirectUrl %></a></td>
+              <td><a href="/url/analytics/<%= url.shortId %>">View</a></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </div>
+</body>
+</html>
