@@ -14,45 +14,41 @@ app.set("views", path.resolve("./views"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); //for form data
 app.use("/url", urlRoutes);
-app.use("/",staticRouter);
+app.use("/", staticRouter);
 
 app.get("/allurls", async (req, res) => {
   const allUrls = await url.find({});
   try {
-    return res.render("home",{
-      urls:allUrls
+    return res.render("home", {
+      id: null,
+      urls: allUrls,
     });
   } catch (error) {
     console.error(err);
     res.status(500).send("Error loading dashboard");
   }
- 
-})
-
-
-
+});
 
 // Redirect
 app.get("/:shortid", async (req, res) => {
-    const shortId = req.params.shortid;
-  
-    try {
-      const entry = await url.findOneAndUpdate(
-        { shortId },
-        { $push: { visitHistory: { timestamp: Date.now() } } }
-      );
-  
-      if (!entry) {
-        return res.status(404).send("<h2>🔗 Short URL not found</h2>");
-      }
-  
-      res.redirect(entry.redirectUrl);
-    } catch (err) {
-      console.error("Redirect error:", err);
-      res.status(500).send("<h2>🚨 Server Error</h2>");
+  const shortId = req.params.shortid;
+
+  try {
+    const entry = await url.findOneAndUpdate(
+      { shortId },
+      { $push: { visitHistory: { timestamp: Date.now() } } }
+    );
+
+    if (!entry) {
+      return res.status(404).send("<h2>🔗 Short URL not found</h2>");
     }
-  });
-  
+
+    res.redirect(entry.redirectUrl);
+  } catch (err) {
+    console.error("Redirect error:", err);
+    res.status(500).send("<h2>🚨 Server Error</h2>");
+  }
+});
 
 connectDB().then(() => {
   app.listen(PORT, () => {

@@ -109,11 +109,11 @@
   <div class="container">
     <h1>🔗 URL Shortener</h1>
 
-    <% if (id) { %>
+    <% if (typeof id !== 'undefined' && id) { %>
       <div class="generated">
         URL Generated 👉 <a href="http://localhost:5000/<%= id %>" target="_blank">http://localhost:5000/<%= id %></a>
       </div>
-    <% } %>
+    <% } %>    
 
     <form method="post" action="/url" class="formm">
       <label for="inputt">Enter your URL:</label>
@@ -132,7 +132,7 @@
           </tr>
         </thead>
         <tbody>
-          <% urls.forEach((url, index) => { %>
+          <% urls.forEach(function(url, index) { %>
             <tr>
               <td><%= index + 1 %></td>
               <td><a href="/<%= url.shortId %>" target="_blank"><%= url.shortId %></a></td>
