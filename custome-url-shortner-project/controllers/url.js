@@ -4,19 +4,28 @@ const URL = require("../models/url");
 async function handleGenerateNewShortUrl(req, res) {
   const body = req.body;
   const shortID = shortid();
+
   if (!body.url) {
-    res
+    return res
       .status(400)
       .json({ success: false, message: "Please provide a valid url" });
   }
 
+  //  First save the new short URL
   await URL.create({
     shortId: shortID,
     redirectUrl: body.url,
     visitHistory: [],
   });
 
-  return res.status(200).json({ id: shortID });
+  //  THEN fetch all updated URLs
+  const allUrls = await URL.find({});
+
+  //  Now render the page with the correct data
+  return res.render("home", {
+    id: shortID,
+    urls: allUrls,
+  });
 }
 
 async function handlegetAnalytics(req, res) {
